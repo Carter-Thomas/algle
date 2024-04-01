@@ -12,8 +12,8 @@ function App() {
   const [showPlayer, setShowPlayer] = useState(false); // State to control whether to show the player
 
   const MAX_GUESSES = 8;
-  const ALGORITHM_STORAGE_KEY = 'rubiks_algorithm';
-  const LAST_PLAY_STORAGE_KEY = 'rubiks_last_play';
+  const ALGORITHM_STORAGE_KEY = 'algorithm';
+  const LAST_PLAY_STORAGE_KEY = 'last_play';
 
   const currentDate = new Date();
   const firstApril = new Date(currentDate.getFullYear(), 3, 1); // April is 3 (0-indexed month)
@@ -183,6 +183,7 @@ function App() {
           </div>
         </>
       )}
+      <h3>Algs are from speedcubedb.net</h3>
     </div>
   );
 }
