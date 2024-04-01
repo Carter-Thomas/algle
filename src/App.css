@@ -31,3 +31,9 @@
 .gray {
   background-color: lightgray;
 }
+
+/* Center Twisty Player */
+.TwistyPlayerContainer {
+  display: flex;
+  justify-content: center;
+}

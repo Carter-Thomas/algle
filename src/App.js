@@ -8,6 +8,7 @@ function App() {
   const [feedbackHistory, setFeedbackHistory] = useState([]);
   const [guessLimitReached, setGuessLimitReached] = useState(false);
   const [gameWon, setGameWon] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false); // State to control whether to show the player
 
   const MAX_GUESSES = 8;
   const ALGORITHM_STORAGE_KEY = 'rubiks_algorithm';
@@ -29,6 +30,13 @@ function App() {
 
     setSolution(localStorage.getItem(ALGORITHM_STORAGE_KEY));
   }, []);
+
+  useEffect(() => {
+    // Check if the game is over and set the showPlayer state to true
+    if (gameWon || guessLimitReached) {
+      setShowPlayer(true);
+    }
+  }, [gameWon, guessLimitReached]);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -110,14 +118,14 @@ function App() {
       .catch((error) => {
         console.error('Failed to copy text to clipboard:', error);
       });
-  }    
-  
+  }
+
   return (
     <div className="App">
       <h1>Guess the Rubik's Cube Algorithm</h1>
       <form onSubmit={handleSubmit}>
         {/* Render feedback history */}
-        {feedbackHistory.slice(-6).map((feedback, guessIndex) => (
+        {feedbackHistory.map((feedback, guessIndex) => (
           <div key={guessIndex} className="guessRow">
             <div className="moveContainer">
               {feedback.map((item, moveIndex) => (
@@ -143,8 +151,39 @@ function App() {
       {guessLimitReached && <p>Sorry, you've reached the guess limit. The correct solution was: {solution}</p>}
       {/* Share button */}
       <button onClick={handleShareClick}>Share</button>
+      {/* Render Twisty Player if showPlayer is true */}
+      {showPlayer && <TwistyPlayerComponent alg={solution} />}
     </div>
   );
 }
+
+// Component to load TwistyPlayer
+const TwistyPlayerComponent = ({ alg }) => {
+  useEffect(() => {
+    if (alg) {
+      importTwistyPlayer(alg); // Pass the solution algorithm to importTwistyPlayer
+    }
+  }, [alg]);
+
+  const importTwistyPlayer = async (alg) => {
+    const { TwistyPlayer } = await import("https://cdn.cubing.net/js/cubing/twisty");
+
+    const playerContainer = document.createElement('div');
+    playerContainer.classList.add('TwistyPlayerContainer'); // Add TwistyPlayerContainer class
+    document.body.appendChild(playerContainer);
+
+    const player = new TwistyPlayer({
+      puzzle: "3x3x3",
+      alg: alg, // Use the solution algorithm here
+      hintFacelets: "none",
+      background: "none"
+    });
+
+    playerContainer.appendChild(player);
+  };
+
+  return null;
+};
+
 
 export default App;
