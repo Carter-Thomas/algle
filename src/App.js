@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import algorithms from './Algs.json'; // Import Algs.json file
+import { TwistyPlayer } from "cubing/twisty";
 
 function App() {
   const [guess, setGuess] = useState('');
@@ -38,6 +39,7 @@ function App() {
     // Check if the game is over and set the showPlayer state to true
     if (gameWon || guessLimitReached) {
       setShowPlayer(true);
+      console.log("Game Over")
     }
   }, [gameWon, guessLimitReached]);
 
@@ -126,7 +128,15 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Guess the Rubik's Cube Algorithm</h1>
+      <h1>Algle - Guess the 3x3 Algorithm</h1>
+      <div className="Twisty">
+        <twisty-player
+            puzzle="3x3x3"
+            experimental-setup-anchor="end"
+            alg={solution}
+            control-panel="none"
+          ></twisty-player>
+          </div>
       <form onSubmit={handleSubmit}>
         {/* Render feedback history */}
         {feedbackHistory.map((feedback, guessIndex) => (
@@ -144,7 +154,6 @@ function App() {
             </div>
           </div>
         ))}
-        {/* Input field and submit button */}
         <input
           type="text"
           value={guess}
@@ -156,49 +165,26 @@ function App() {
           Submit
         </button>
       </form>
-      {/* Display game outcome messages */}
       {gameWon && <p>Congratulations! You guessed the solution.</p>}
       {guessLimitReached && (
         <p>
           Sorry, you've reached the guess limit. The correct solution was: {solution}
         </p>
       )}
-      {/* Share button */}
       <button onClick={handleShareClick}>Share</button>
-      {/* Render Twisty Player if showPlayer is true */}
-      {showPlayer && <TwistyPlayerComponent alg={solution} />}
+      {showPlayer && (
+        <>
+          <div className="Twisty">
+        <twisty-player
+            puzzle="3x3x3"
+            experimental-setup-anchor="end"
+            alg={solution}
+          ></twisty-player>
+          </div>
+        </>
+      )}
     </div>
   );
 }
-
-// Component to load TwistyPlayer
-const TwistyPlayerComponent = ({ alg }) => {
-  useEffect(() => {
-    if (alg) {
-      importTwistyPlayer(alg); // Pass the solution algorithm to importTwistyPlayer
-    }
-  }, [alg]);
-
-  const importTwistyPlayer = async (alg) => {
-    const { TwistyPlayer } = await import(
-      'https://cdn.cubing.net/js/cubing/twisty'
-    );
-
-    const playerContainer = document.createElement('div');
-    playerContainer.classList.add('TwistyPlayerContainer'); // Add TwistyPlayerContainer class
-    document.body.appendChild(playerContainer);
-
-    const player = new TwistyPlayer({
-      puzzle: '3x3x3',  
-      alg: alg, // Use the solution algorithm here
-      hintFacelets: 'none',
-      background: 'none',
-    });
-
-    playerContainer.appendChild(player);
-  };
-
-  return null;
-};
 
 export default App;
