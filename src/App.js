@@ -113,7 +113,7 @@ function App() {
     }
 
     // Generate textual representation of the game status with emojis
-    const shareText = `Algle - A Rubik's Cube Algorithm Game\n\nPuzzle Day: ${puzzleDay}\nNumber of Guesses: ${guessesToWin}/8\n\nSolution: ${solution}\n\nGuesses:\n${feedbackHistory.map((feedback, index) => `Guess ${index + 1}: ${feedback.map((item) => emojis[item.color]).join(' ')}`).join('\n')}`;
+    const shareText = `Algle - A Rubik's Cube Algorithm Game\n\nPuzzle Day: ${puzzleDay}\nNumber of Guesses: ${guessesToWin}/8\n\nSolution: ||${solution}|| \n\nGuesses:\n${feedbackHistory.map((feedback, index) => `Guess ${index + 1}: ${feedback.map((item) => emojis[item.color]).join(' ')}`).join('\n')}`;
 
     // Copy shareText to clipboard
     navigator.clipboard
