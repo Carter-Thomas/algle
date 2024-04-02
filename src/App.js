@@ -12,27 +12,25 @@ function App() {
   const [showPlayer, setShowPlayer] = useState(false); // State to control whether to show the player
 
   const MAX_GUESSES = 8;
-  const ALGORITHM_STORAGE_KEY = 'algorithm';
-  const LAST_PLAY_STORAGE_KEY = 'last_play';
-
-  const currentDate = new Date();
-  const firstApril = new Date(currentDate.getFullYear(), 3, 1); // April is 3 (0-indexed month)
-  const puzzleDay = Math.floor((currentDate - firstApril) / (1000 * 60 * 60 * 24)) + 1; // Adding 1 to make April 1st puzzle #1
+  const ALGORITHM_STORAGE_KEY_PREFIX = 'algorithm_';
 
   useEffect(() => {
-    const lastPlayDate = localStorage.getItem(LAST_PLAY_STORAGE_KEY);
+    const currentDate = new Date();
+    const firstDay = new Date(currentDate.getFullYear(), 3, 1); // April is 3 (0-indexed month)
+    const puzzleDay = Math.floor((currentDate - firstDay) / (1000 * 60 * 60 * 24)) + 1; // Adding 1 to make April 1st puzzle #1
+    const storedAlgorithm = localStorage.getItem(ALGORITHM_STORAGE_KEY_PREFIX + puzzleDay);
 
-    if (!lastPlayDate || lastPlayDate !== currentDate.toDateString()) {
-      // Generate a new algorithm for the day if it's a new day
+    if (storedAlgorithm) {
+      setSolution(storedAlgorithm);
+    } else {
+      // Generate a new algorithm for the day if it doesn't exist
       const algorithmKeys = Object.keys(algorithms);
-      const randomIndex = Math.floor(Math.random() * algorithmKeys.length);
+      const randomIndex = puzzleDay % algorithmKeys.length;
       const randomAlgorithmKey = algorithmKeys[randomIndex];
       const newAlgorithm = algorithms[randomAlgorithmKey];
-      localStorage.setItem(ALGORITHM_STORAGE_KEY, newAlgorithm);
-      localStorage.setItem(LAST_PLAY_STORAGE_KEY, currentDate.toDateString());
+      localStorage.setItem(ALGORITHM_STORAGE_KEY_PREFIX + puzzleDay, newAlgorithm);
+      setSolution(newAlgorithm);
     }
-
-    setSolution(localStorage.getItem(ALGORITHM_STORAGE_KEY));
   }, []);
 
   useEffect(() => {
@@ -98,6 +96,10 @@ function App() {
       gray: '⬜', // Gray square
     };
 
+    const currentDate = new Date();
+    const firstDay = new Date(currentDate.getFullYear(), 3, 1); // April is 3 (0-indexed month)
+    const puzzleDay = Math.floor((currentDate - firstDay) / (1000 * 60 * 60 * 24)) + 1; // Adding 1 to make April 1st puzzle #1
+
     // Count the number of guesses made
     const numberOfGuesses = feedbackHistory.length;
 
@@ -131,12 +133,12 @@ function App() {
       <h1>Algle - Guess the 3x3 Algorithm</h1>
       <div className="Twisty">
         <twisty-player
-            puzzle="3x3x3"
-            experimental-setup-anchor="end"
-            alg={solution}
-            control-panel="none"
-          ></twisty-player>
-          </div>
+          puzzle="3x3x3"
+          experimental-setup-anchor="end"
+          alg={solution}
+          control-panel="none"
+        ></twisty-player>
+      </div>
       <form onSubmit={handleSubmit}>
         {/* Render feedback history */}
         {feedbackHistory.map((feedback, guessIndex) => (
@@ -175,11 +177,11 @@ function App() {
       {showPlayer && (
         <>
           <div className="Twisty">
-        <twisty-player
-            puzzle="3x3x3"
-            experimental-setup-anchor="end"
-            alg={solution}
-          ></twisty-player>
+            <twisty-player
+              puzzle="3x3x3"
+              experimental-setup-anchor="end"
+              alg={solution}
+            ></twisty-player>
           </div>
         </>
       )}
