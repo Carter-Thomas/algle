@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import algorithms from './Algs.json'; // Import Algs.json file
+import algorithms from './RandomizedAlgs.json';
 import { TwistyPlayer } from "cubing/twisty";
 
 function App() {
@@ -9,10 +9,10 @@ function App() {
   const [feedbackHistory, setFeedbackHistory] = useState([]);
   const [guessLimitReached, setGuessLimitReached] = useState(false);
   const [gameWon, setGameWon] = useState(false);
-  const [showPlayer, setShowPlayer] = useState(false); // State to control whether to show the player
+  const [showPlayer, setShowPlayer] = useState(false); 
 
   const MAX_GUESSES = 8;
-  const ALGORITHM_STORAGE_KEY_PREFIX = 'algorithm_';
+  const ALGORITHM_STORAGE_KEY_PREFIX = 'algorithm';
 
   useEffect(() => {
     const currentDate = new Date();
@@ -23,7 +23,6 @@ function App() {
     if (storedAlgorithm) {
       setSolution(storedAlgorithm);
     } else {
-      // Generate a new algorithm for the day if it doesn't exist
       const algorithmKeys = Object.keys(algorithms);
       const randomIndex = puzzleDay % algorithmKeys.length;
       const randomAlgorithmKey = algorithmKeys[randomIndex];
@@ -34,7 +33,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Check if the game is over and set the showPlayer state to true
     if (gameWon || guessLimitReached) {
       setShowPlayer(true);
       console.log("Game Over")
@@ -44,13 +42,13 @@ function App() {
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (gameWon || guessLimitReached) return; // If game is won or guess limit reached, do nothing
+    if (gameWon || guessLimitReached) return; 
 
     // Split solution and guess into arrays for individual moves
     const solutionMoves = solution.split(' ');
     const guessMoves = guess.split(' ');
 
-    // Check each move for correctness and provide feedback
+    // Check each move and provide feedback
     const newFeedback = solutionMoves.map((move, moveIndex) => {
       const guessedLetter = guessMoves[moveIndex];
       if (guessedLetter === move || guessedLetter === move.replace("'", "’")) {
@@ -89,18 +87,16 @@ function App() {
   }
 
   function handleShareClick() {
-    // Define emojis for feedback
     const emojis = {
-      green: '🟩', // Green square
-      yellow: '🟨', // Yellow square
-      gray: '⬜', // Gray square
+      green: '🟩', 
+      yellow: '🟨', 
+      gray: '⬜',
     };
 
     const currentDate = new Date();
     const firstApril = new Date(currentDate.getFullYear(), 3, 1); // April is 3 (0-indexed month)
     const puzzleDay = Math.floor((currentDate - firstApril) / (1000 * 60 * 60 * 24)) + 1; // Adding 1 to make April 1st puzzle #1
 
-    // Count the number of guesses made
     const numberOfGuesses = feedbackHistory.length;
 
     // Determine if the game was won and calculate the number of guesses needed to win
@@ -117,7 +113,6 @@ function App() {
     // Generate textual representation of the game status with emojis
     const shareText = `Algle - A Rubik's Cube Algorithm Game\n\nPuzzle Day: ${puzzleDay}\nNumber of Guesses: ${guessesToWin}/8\n\nSolution: ||${solution}|| \n\nGuesses:\n${feedbackHistory.map((feedback, index) => `Guess ${index + 1}: ${feedback.map((item) => emojis[item.color]).join(' ')}`).join('\n')}`;
 
-    // Copy shareText to clipboard
     navigator.clipboard
       .writeText(shareText)
       .then(() => {
