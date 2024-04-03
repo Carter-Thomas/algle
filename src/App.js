@@ -129,6 +129,7 @@ function App() {
       <div className="Twisty">
         <twisty-player
           puzzle="3x3x3"
+          background="none"
           experimental-setup-anchor="end"
           alg={solution}
           control-panel="none"
@@ -168,19 +169,22 @@ function App() {
           Sorry, you've reached the guess limit. The correct solution was: {solution}
         </p>
       )}
-      <button onClick={handleShareClick}>Share</button>
+      <div className="shareButtonContainer">
+      <button className="shareButton" onClick={handleShareClick}>Share</button>
+      </div>
       {showPlayer && (
         <>
           <div className="Twisty">
             <twisty-player
               puzzle="3x3x3"
+              background="none"
               experimental-setup-anchor="end"
               alg={solution}
             ></twisty-player>
           </div>
         </>
       )}
-      <h3>Algs are from speedcubedb.net</h3>
+      <h3>Created By Carter Thomas, Algs are from speedcubedb.net</h3>
     </div>
   );
 }
