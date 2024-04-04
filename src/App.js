@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import algorithms from './RandomizedAlgs.json';
 import { TwistyPlayer } from "cubing/twisty";
+import { FaGithub } from 'react-icons/fa'; // Import GitHub icon from react-icons/fa
 
 function App() {
   const [guess, setGuess] = useState('');
@@ -10,13 +11,14 @@ function App() {
   const [guessLimitReached, setGuessLimitReached] = useState(false);
   const [gameWon, setGameWon] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false); 
+  const [showRules, setShowRules] = useState(false); // State for showing/hiding rules
 
   const MAX_GUESSES = 8;
   const ALGORITHM_STORAGE_KEY_PREFIX = 'algorithm';
 
   useEffect(() => {
     const currentDate = new Date();
-    const firstApril = new Date(currentDate.getFullYear(), 3, 1); // April is 3 (0-indexed month)
+    const firstApril = new Date(currentDate.getFullYear(), 3, 3); // April is 3 (0-indexed month)
     const puzzleDay = Math.floor((currentDate - firstApril) / (1000 * 60 * 60 * 24)) + 1; // Adding 1 to make April 1st puzzle #1
     const storedAlgorithm = localStorage.getItem(ALGORITHM_STORAGE_KEY_PREFIX + puzzleDay);
 
@@ -71,7 +73,6 @@ function App() {
       setGameWon(true);
     }
 
-    // Reset the guess input
     setGuess('');
 
     // Check if guess limit is reached
@@ -126,6 +127,20 @@ function App() {
   return (
     <div className="App">
       <h1>Algle - Guess the 3x3 Algorithm</h1>
+      <button onClick={() => setShowRules(!showRules)}>How To Play</button> 
+      {showRules && ( 
+        <div className="rulesDropdown">
+          <h1>How To Play</h1>
+          <h2>Guess the Algle in 8 tries</h2>
+          <h3>The color shown will denote how close your guessed turn was to the actual turn</h3>
+          <h3>A gray color indicates that the move you guessed is not present in the box corresponding to the move</h3>
+          <h3>A yellow color indicates the base move is correct, but the turn is the wrong direction</h3>
+          <h3>A green color indicates your guess for that box was correct</h3>
+          <h3>Wide moves are denoted as lowercase letters (i.e. r,l,f,b,etc.)</h3>
+          <h3>The angle that is provided is generally where the first move begins. However, sometimes the first move will begin with an x or z rotation</h3>
+          <h3>Algsets included: OLL, PLL, ZBLL, VLS, ELL</h3>
+        </div>
+      )}
       <div className="Twisty">
         <twisty-player
           puzzle="3x3x3"
@@ -184,7 +199,18 @@ function App() {
           </div>
         </>
       )}
-      <h3>Created By Carter Thomas, Algs are from speedcubedb.net</h3>
+      <div className="whitespace">
+        <h1>ff</h1>
+        <h1>ff</h1>
+        <h1>ff</h1>
+        <h1>ff</h1>
+      </div>
+      <footer className="footer">
+        <p>Created By Carter Thomas, Algs sourced from speedcubedb.net</p>
+        <a href="https://github.com/Carter-Thomas/algle" target="_blank" rel="noopener noreferrer">
+          <FaGithub size={24} />
+        </a>
+      </footer>
     </div>
   );
 }
