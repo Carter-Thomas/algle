@@ -136,6 +136,7 @@ function App() {
           <h3>A gray color indicates that the move you guessed is not present in the box corresponding to the move</h3>
           <h3>A yellow color indicates the base move is correct, but the turn is the wrong direction</h3>
           <h3>A green color indicates your guess for that box was correct</h3>
+          <h3>Each move should have a space in between it and the next move</h3>
           <h3>Wide moves are denoted as lowercase letters (i.e. r,l,f,b,etc.)</h3>
           <h3>The angle that is provided is generally where the first move begins. However, sometimes the first move will begin with an x or z rotation</h3>
           <h3>Algsets included: OLL, PLL, ZBLL, VLS, ELL</h3>
