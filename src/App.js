@@ -18,12 +18,13 @@ function App() {
 
   useEffect(() => {
     const currentDate = new Date();
-    const firstApril = new Date(currentDate.getFullYear(), 3, 3); // April is 3 (0-indexed month)
+    const firstApril = new Date(currentDate.getFullYear(), 3, 5); // April is 3 (0-indexed month)
     const puzzleDay = Math.floor((currentDate - firstApril) / (1000 * 60 * 60 * 24)) + 1; // Adding 1 to make April 1st puzzle #1
     const storedAlgorithm = localStorage.getItem(ALGORITHM_STORAGE_KEY_PREFIX + puzzleDay);
 
     if (storedAlgorithm) {
       setSolution(storedAlgorithm);
+      localStorage.clear();
     } else {
       const algorithmKeys = Object.keys(algorithms);
       const randomIndex = puzzleDay % algorithmKeys.length;
@@ -95,7 +96,7 @@ function App() {
     };
 
     const currentDate = new Date();
-    const firstApril = new Date(currentDate.getFullYear(), 3, 1); // April is 3 (0-indexed month)
+    const firstApril = new Date(currentDate.getFullYear(), 3, 4); // April is 3 (0-indexed month)
     const puzzleDay = Math.floor((currentDate - firstApril) / (1000 * 60 * 60 * 24)) + 1; // Adding 1 to make April 1st puzzle #1
 
     const numberOfGuesses = feedbackHistory.length;
